@@ -15,6 +15,8 @@ executable_dir  = settings['Executable Directory Path']
 executable_name = settings['Executable Name']
 executable_path = os.path.join(executable_dir, executable_name)
 
+print("Executable Path: " + executable_path)
+
 data_root_dir  = os.path.join(current_path, 'data')
 results_root_dir = os.path.join(current_path, 'results')
 
@@ -121,7 +123,7 @@ def mean(json):
 print("Compiling results...")
 for i in range(len(output_dirs)):
     print("----Opening Evaluation: " + output_dirs[i] + "...")
-    with open(os.join(output_dirs[i], 'evaluation.json'), 'r') as f_i:
+    with open(os.path.join(output_dirs[i], 'evaluation.json'), 'r') as f_i:
         f_i_data = json.load(f_i)
         _id = f_i_data["ID"]
 
