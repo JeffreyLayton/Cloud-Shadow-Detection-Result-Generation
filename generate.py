@@ -17,8 +17,8 @@ executable_path = os.path.join(executable_dir, executable_name)
 
 print("Executable Path: " + executable_path)
 
-data_root_dir  = os.path.join(current_path, 'data')
-results_root_dir = os.path.join(current_path, 'results')
+data_root_dir  = os.path.join(current_path, 'data\\evaluation')
+results_root_dir = os.path.join(current_path, 'results\\evaluation')
 
 if not os.path.exists(results_root_dir):
    os.makedirs(results_root_dir)
