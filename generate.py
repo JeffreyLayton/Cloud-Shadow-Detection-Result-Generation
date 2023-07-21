@@ -78,35 +78,35 @@ eval_json["FSM"]  = {
     , "P": {"Mean": 0.0, "Values": {}}
 }
 #Information Regarding change between stage
-eval_json["D-PSM-OSM"] = {
-    "FP-R": {"Mean": 0.0, "Values": {}}
-    , "FN-R": {"Mean": 0.0, "Values": {}}
-    , "F-R": {"Mean": 0.0, "Values": {}}
-    , "FP-T": {"Mean": 0.0, "Values": {}}
-    , "FN-T": {"Mean": 0.0, "Values": {}}
-    , "F-T": {"Mean": 0.0, "Values": {}}
-    , "U": {"Mean": 0.0, "Values": {}}
-    , "P": {"Mean": 0.0, "Values": {}}
+eval_json["D-M-PSM-OSM"] = {
+      "FP-R":  0.0
+    , "FN-R":  0.0
+    , "F-R":  0.0
+    , "FP-T":  0.0
+    , "FN-T":  0.0
+    , "F-T":  0.0
+    , "U":  0.0
+    , "P":  0.0
 }
-eval_json["D-OSM-FSM"] = {
-    "FP-R": {"Mean": 0.0, "Values": {}}
-    , "FN-R": {"Mean": 0.0, "Values": {}}
-    , "F-R": {"Mean": 0.0, "Values": {}}
-    , "FP-T": {"Mean": 0.0, "Values": {}}
-    , "FN-T": {"Mean": 0.0, "Values": {}}
-    , "F-T": {"Mean": 0.0, "Values": {}}
-    , "U": {"Mean": 0.0, "Values": {}}
-    , "P": {"Mean": 0.0, "Values": {}}
+eval_json["D-M-OSM-FSM"] = {
+      "FP-R":  0.0
+    , "FN-R":  0.0
+    , "F-R":  0.0
+    , "FP-T":  0.0
+    , "FN-T":  0.0
+    , "F-T":  0.0
+    , "U":  0.0
+    , "P":  0.0
 }
-eval_json["D-PSM-FSM"] = {
-    "FP-R": {"Mean": 0.0, "Values": {}}
-    , "FN-R": {"Mean": 0.0, "Values": {}}
-    , "F-R": {"Mean": 0.0, "Values": {}}
-    , "FP-T": {"Mean": 0.0, "Values": {}}
-    , "FN-T": {"Mean": 0.0, "Values": {}}
-    , "F-T": {"Mean": 0.0, "Values": {}}
-    , "U": {"Mean": 0.0, "Values": {}}
-    , "P": {"Mean": 0.0, "Values": {}}
+eval_json["D-M-PSM-FSM"] = {
+      "FP-R":  0.0
+    , "FN-R":  0.0
+    , "F-R":  0.0
+    , "FP-T":  0.0
+    , "FN-T":  0.0
+    , "F-T":  0.0
+    , "U":  0.0
+    , "P":  0.0
 }
 
 def delta(original,new):
@@ -157,33 +157,6 @@ for i in range(len(output_dirs)):
         eval_json["FSM"]["U"]["Values"][_id] = f_i_data["Final Shadow Mask"]["Users Accuracy"]
         eval_json["FSM"]["P"]["Values"][_id] = f_i_data["Final Shadow Mask"]["Producers Accuracy"]
 
-        eval_json["D-PSM-OSM"]["FP-R"]["Values"][_id] = delta(eval_json["PSM"]["FP-R"]["Values"][_id], eval_json["OSM"]["FP-R"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["FN-R"]["Values"][_id] = delta(eval_json["PSM"]["FN-R"]["Values"][_id], eval_json["OSM"]["FN-R"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["F-R"]["Values"][_id] = delta(eval_json["PSM"]["F-R"]["Values"][_id], eval_json["OSM"]["F-R"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["FP-T"]["Values"][_id] = delta(eval_json["PSM"]["FP-T"]["Values"][_id], eval_json["OSM"]["FP-T"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["FN-T"]["Values"][_id] = delta(eval_json["PSM"]["FN-T"]["Values"][_id], eval_json["OSM"]["FN-T"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["F-T"]["Values"][_id] = delta(eval_json["PSM"]["F-T"]["Values"][_id], eval_json["OSM"]["F-T"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["U"]["Values"][_id] = delta(eval_json["PSM"]["U"]["Values"][_id], eval_json["OSM"]["U"]["Values"][_id])
-        eval_json["D-PSM-OSM"]["P"]["Values"][_id] = delta(eval_json["PSM"]["P"]["Values"][_id], eval_json["OSM"]["P"]["Values"][_id])
-
-        eval_json["D-OSM-FSM"]["FP-R"]["Values"][_id] = delta(eval_json["OSM"]["FP-R"]["Values"][_id], eval_json["FSM"]["FP-R"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["FN-R"]["Values"][_id] = delta(eval_json["OSM"]["FN-R"]["Values"][_id], eval_json["FSM"]["FN-R"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["F-R"]["Values"][_id] = delta(eval_json["OSM"]["F-R"]["Values"][_id], eval_json["FSM"]["F-R"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["FP-T"]["Values"][_id] = delta(eval_json["OSM"]["FP-T"]["Values"][_id], eval_json["FSM"]["FP-T"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["FN-T"]["Values"][_id] = delta(eval_json["OSM"]["FN-T"]["Values"][_id], eval_json["FSM"]["FN-T"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["F-T"]["Values"][_id] = delta(eval_json["OSM"]["F-T"]["Values"][_id], eval_json["FSM"]["F-T"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["U"]["Values"][_id] = delta(eval_json["OSM"]["U"]["Values"][_id], eval_json["FSM"]["U"]["Values"][_id])
-        eval_json["D-OSM-FSM"]["P"]["Values"][_id] = delta(eval_json["OSM"]["P"]["Values"][_id], eval_json["FSM"]["P"]["Values"][_id])
-
-        eval_json["D-PSM-FSM"]["FP-R"]["Values"][_id] = delta(eval_json["PSM"]["FP-R"]["Values"][_id], eval_json["FSM"]["FP-R"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["FN-R"]["Values"][_id] = delta(eval_json["PSM"]["FN-R"]["Values"][_id], eval_json["FSM"]["FN-R"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["F-R"]["Values"][_id] = delta(eval_json["PSM"]["F-R"]["Values"][_id], eval_json["FSM"]["F-R"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["FP-T"]["Values"][_id] = delta(eval_json["PSM"]["FP-T"]["Values"][_id], eval_json["FSM"]["FP-T"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["FN-T"]["Values"][_id] = delta(eval_json["PSM"]["FN-T"]["Values"][_id], eval_json["FSM"]["FN-T"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["F-T"]["Values"][_id] = delta(eval_json["PSM"]["F-T"]["Values"][_id], eval_json["FSM"]["F-T"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["U"]["Values"][_id] = delta(eval_json["PSM"]["U"]["Values"][_id], eval_json["FSM"]["U"]["Values"][_id])
-        eval_json["D-PSM-FSM"]["P"]["Values"][_id] = delta(eval_json["PSM"]["P"]["Values"][_id], eval_json["FSM"]["P"]["Values"][_id])
-
 eval_json["SUN"]["Mean"] = mean(eval_json["SUN"]["Values"])
 eval_json["VIEW"]["Mean"] = mean(eval_json["VIEW"]["Values"])
 
@@ -214,33 +187,33 @@ eval_json["FSM"]["F-T"]["Mean"] = mean(eval_json["FSM"]["F-T"]["Values"])
 eval_json["FSM"]["U"]["Mean"] = mean(eval_json["FSM"]["U"]["Values"])
 eval_json["FSM"]["P"]["Mean"] = mean(eval_json["FSM"]["P"]["Values"])
 
-eval_json["D-PSM-OSM"]["FP-R"]["Mean"] = mean(eval_json["D-PSM-OSM"]["FP-R"]["Values"])
-eval_json["D-PSM-OSM"]["FN-R"]["Mean"] = mean(eval_json["D-PSM-OSM"]["FN-R"]["Values"])
-eval_json["D-PSM-OSM"]["F-R"]["Mean"] = mean(eval_json["D-PSM-OSM"]["F-R"]["Values"])
-eval_json["D-PSM-OSM"]["FP-T"]["Mean"] = mean(eval_json["D-PSM-OSM"]["FP-T"]["Values"])
-eval_json["D-PSM-OSM"]["FN-T"]["Mean"] = mean(eval_json["D-PSM-OSM"]["FN-T"]["Values"])
-eval_json["D-PSM-OSM"]["F-T"]["Mean"] = mean(eval_json["D-PSM-OSM"]["F-T"]["Values"])
-eval_json["D-PSM-OSM"]["U"]["Mean"] = mean(eval_json["D-PSM-OSM"]["U"]["Values"])
-eval_json["D-PSM-OSM"]["P"]["Mean"] = mean(eval_json["D-PSM-OSM"]["P"]["Values"])
+eval_json["D-M-PSM-OSM"]["FP-R"] = delta(eval_json["PSM"]["FP-R"]["Mean"], eval_json["OSM"]["FP-R"]["Mean"])
+eval_json["D-M-PSM-OSM"]["FN-R"] = delta(eval_json["PSM"]["FN-R"]["Mean"], eval_json["OSM"]["FN-R"]["Mean"])
+eval_json["D-M-PSM-OSM"]["F-R"] = delta(eval_json["PSM"]["F-R"]["Mean"], eval_json["OSM"]["F-R"]["Mean"])
+eval_json["D-M-PSM-OSM"]["FP-T"] = delta(eval_json["PSM"]["FP-T"]["Mean"], eval_json["OSM"]["FP-T"]["Mean"])
+eval_json["D-M-PSM-OSM"]["FN-T"] = delta(eval_json["PSM"]["FN-T"]["Mean"], eval_json["OSM"]["FN-T"]["Mean"])
+eval_json["D-M-PSM-OSM"]["F-T"] = delta(eval_json["PSM"]["F-T"]["Mean"], eval_json["OSM"]["F-T"]["Mean"])
+eval_json["D-M-PSM-OSM"]["U"] = delta(eval_json["PSM"]["U"]["Mean"], eval_json["OSM"]["U"]["Mean"])
+eval_json["D-M-PSM-OSM"]["P"] = delta(eval_json["PSM"]["P"]["Mean"], eval_json["OSM"]["P"]["Mean"])
 
-eval_json["D-OSM-FSM"]["FP-R"]["Mean"] = mean(eval_json["D-OSM-FSM"]["FP-R"]["Values"])
-eval_json["D-OSM-FSM"]["FN-R"]["Mean"] = mean(eval_json["D-OSM-FSM"]["FN-R"]["Values"])
-eval_json["D-OSM-FSM"]["F-R"]["Mean"] = mean(eval_json["D-OSM-FSM"]["F-R"]["Values"])
-eval_json["D-OSM-FSM"]["FP-T"]["Mean"] = mean(eval_json["D-OSM-FSM"]["FP-T"]["Values"])
-eval_json["D-OSM-FSM"]["FN-T"]["Mean"] = mean(eval_json["D-OSM-FSM"]["FN-T"]["Values"])
-eval_json["D-OSM-FSM"]["F-T"]["Mean"] = mean(eval_json["D-OSM-FSM"]["F-T"]["Values"])
-eval_json["D-OSM-FSM"]["U"]["Mean"] = mean(eval_json["D-OSM-FSM"]["U"]["Values"])
-eval_json["D-OSM-FSM"]["P"]["Mean"] = mean(eval_json["D-OSM-FSM"]["P"]["Values"])
+eval_json["D-M-OSM-FSM"]["FP-R"] = delta(eval_json["OSM"]["FP-R"]["Mean"], eval_json["FSM"]["FP-R"]["Mean"])
+eval_json["D-M-OSM-FSM"]["FN-R"] = delta(eval_json["OSM"]["FN-R"]["Mean"], eval_json["FSM"]["FN-R"]["Mean"])
+eval_json["D-M-OSM-FSM"]["F-R"] = delta(eval_json["OSM"]["F-R"]["Mean"], eval_json["FSM"]["F-R"]["Mean"])
+eval_json["D-M-OSM-FSM"]["FP-T"] = delta(eval_json["OSM"]["FP-T"]["Mean"], eval_json["FSM"]["FP-T"]["Mean"])
+eval_json["D-M-OSM-FSM"]["FN-T"] = delta(eval_json["OSM"]["FN-T"]["Mean"], eval_json["FSM"]["FN-T"]["Mean"])
+eval_json["D-M-OSM-FSM"]["F-T"] = delta(eval_json["OSM"]["F-T"]["Mean"], eval_json["FSM"]["F-T"]["Mean"])
+eval_json["D-M-OSM-FSM"]["U"] = delta(eval_json["OSM"]["U"]["Mean"], eval_json["FSM"]["U"]["Mean"])
+eval_json["D-M-OSM-FSM"]["P"] = delta(eval_json["OSM"]["P"]["Mean"], eval_json["FSM"]["P"]["Mean"])
 
-eval_json["D-PSM-FSM"]["FP-R"]["Mean"] = mean(eval_json["D-PSM-FSM"]["FP-R"]["Values"])
-eval_json["D-PSM-FSM"]["FN-R"]["Mean"] = mean(eval_json["D-PSM-FSM"]["FN-R"]["Values"])
-eval_json["D-PSM-FSM"]["F-R"]["Mean"] = mean(eval_json["D-PSM-FSM"]["F-R"]["Values"])
-eval_json["D-PSM-FSM"]["FP-T"]["Mean"] = mean(eval_json["D-PSM-FSM"]["FP-T"]["Values"])
-eval_json["D-PSM-FSM"]["FN-T"]["Mean"] = mean(eval_json["D-PSM-FSM"]["FN-T"]["Values"])
-eval_json["D-PSM-FSM"]["F-T"]["Mean"] = mean(eval_json["D-PSM-FSM"]["F-T"]["Values"])
-eval_json["D-PSM-FSM"]["U"]["Mean"] = mean(eval_json["D-PSM-FSM"]["U"]["Values"])
-eval_json["D-PSM-FSM"]["P"]["Mean"] = mean(eval_json["D-PSM-FSM"]["P"]["Values"])
-
+eval_json["D-M-PSM-FSM"]["FP-R"] = delta(eval_json["PSM"]["FP-R"]["Mean"], eval_json["FSM"]["FP-R"]["Mean"])
+eval_json["D-M-PSM-FSM"]["FN-R"] = delta(eval_json["PSM"]["FN-R"]["Mean"], eval_json["FSM"]["FN-R"]["Mean"])
+eval_json["D-M-PSM-FSM"]["F-R"] = delta(eval_json["PSM"]["F-R"]["Mean"], eval_json["FSM"]["F-R"]["Mean"])
+eval_json["D-M-PSM-FSM"]["FP-T"] = delta(eval_json["PSM"]["FP-T"]["Mean"], eval_json["FSM"]["FP-T"]["Mean"])
+eval_json["D-M-PSM-FSM"]["FN-T"] = delta(eval_json["PSM"]["FN-T"]["Mean"], eval_json["FSM"]["FN-T"]["Mean"])
+eval_json["D-M-PSM-FSM"]["F-T"] = delta(eval_json["PSM"]["F-T"]["Mean"], eval_json["FSM"]["F-T"]["Mean"])
+eval_json["D-M-PSM-FSM"]["U"] = delta(eval_json["PSM"]["U"]["Mean"], eval_json["FSM"]["U"]["Mean"])
+eval_json["D-M-PSM-FSM"]["P"] = delta(eval_json["PSM"]["P"]["Mean"], eval_json["FSM"]["P"]["Mean"])
+                                                     
 print("Saving compiled results...")
 with open(os.path.join(results_root_dir, 'evaluation_compilation.json'), 'w') as f_o:
     json.dump(eval_json, f_o)
