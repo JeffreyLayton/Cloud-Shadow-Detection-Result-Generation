@@ -17,30 +17,48 @@ executable_path = os.path.join(executable_dir, executable_name)
 
 print("Executable Path: " + executable_path)
 
-data_root_dir  = os.path.join(current_path, 'data\\evaluation')
-results_root_dir = os.path.join(current_path, 'results\\evaluation')
+dat_eval_root_dir = os.path.join(current_path, 'data\\evaluation')
+dat_addi_root_dir = os.path.join(current_path, 'data\\additional')
+res_eval_root_dir = os.path.join(current_path, 'results\\evaluation')
+res_addi_root_dir = os.path.join(current_path, 'results\\additional')
 
-if not os.path.exists(results_root_dir):
-   os.makedirs(results_root_dir)
+if not os.path.exists(res_eval_root_dir):
+   os.makedirs(res_eval_root_dir)
 
-input_dirs = []
-output_dirs = []
+input_eval_dirs = []
+output_eval_dirs = []
+
+input_addi_dirs = []
+output_addi_dirs = []
 
 print("Compiling inputs...")
-for sub_dir in os.listdir(data_root_dir):
-    data_dir = os.path.join(data_root_dir, sub_dir)
+for sub_dir in os.listdir(dat_eval_root_dir):
+    data_dir = os.path.join(dat_eval_root_dir, sub_dir)
     if os.path.isdir(data_dir):
-        results_dir = os.path.join(results_root_dir, sub_dir)
+        results_dir = os.path.join(res_eval_root_dir, sub_dir)
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
-        print("----Adding data set to inputs: " + sub_dir)
-        input_dirs.append(data_dir)
-        output_dirs.append(results_dir)
+        print("----Adding evaluation set to inputs: " + sub_dir)
+        input_eval_dirs.append(data_dir)
+        output_eval_dirs.append(results_dir)
+
+for sub_dir in os.listdir(dat_addi_root_dir):
+    data_dir = os.path.join(dat_addi_root_dir, sub_dir)
+    if os.path.isdir(data_dir):
+        results_dir = os.path.join(res_addi_root_dir, sub_dir)
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+        print("----Adding additional set to inputs: " + sub_dir)
+        input_addi_dirs.append(data_dir)
+        output_addi_dirs.append(results_dir)
 
 print("Executing shadow detection...")
-for i in range(len(input_dirs)):
-    print("----Executing input: " + Quote(input_dirs[i]) + " and outputing to: " + Quote(output_dirs[i]))
-    subprocess.run([executable_path, "-e", "-f", "--input_dir=" + Quote(input_dirs[i]), "--output_dir=" + Quote(output_dirs[i])], cwd=executable_dir)
+for i in range(len(input_eval_dirs)):
+    print("----Executing input: " + Quote(input_eval_dirs[i]) + " and outputing to: " + Quote(output_eval_dirs[i]))
+    subprocess.run([executable_path, "-e", "-f", "--input_dir=" + Quote(input_eval_dirs[i]), "--output_dir=" + Quote(output_eval_dirs[i])], cwd=executable_dir)
+for i in range(len(input_addi_dirs)):
+    print("----Executing input: " + Quote(input_addi_dirs[i]) + " and outputing to: " + Quote(output_addi_dirs[i]))
+    subprocess.run([executable_path, "-f", "--input_dir=" + Quote(input_addi_dirs[i]), "--output_dir=" + Quote(output_addi_dirs[i])], cwd=executable_dir)
 
 eval_json = {}
 #Information Regarding Sun and View Position
@@ -121,9 +139,9 @@ def mean(json):
     return acc / count
 
 print("Compiling results...")
-for i in range(len(output_dirs)):
-    print("----Opening Evaluation: " + output_dirs[i] + "...")
-    with open(os.path.join(output_dirs[i], 'evaluation.json'), 'r') as f_i:
+for i in range(len(output_eval_dirs)):
+    print("----Opening Evaluation: " + output_eval_dirs[i] + "...")
+    with open(os.path.join(output_eval_dirs[i], 'evaluation.json'), 'r') as f_i:
         f_i_data = json.load(f_i)
         _id = f_i_data["ID"]
 
@@ -215,7 +233,7 @@ eval_json["D-M-PSM-FSM"]["U"] = delta(eval_json["PSM"]["U"]["Mean"], eval_json["
 eval_json["D-M-PSM-FSM"]["P"] = delta(eval_json["PSM"]["P"]["Mean"], eval_json["FSM"]["P"]["Mean"])
                                                      
 print("Saving compiled results...")
-with open(os.path.join(results_root_dir, 'evaluation_compilation.json'), 'w') as f_o:
+with open(os.path.join(res_eval_root_dir, 'evaluation_compilation.json'), 'w') as f_o:
     json.dump(eval_json, f_o)
     
 print("Finished...")
