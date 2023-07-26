@@ -1,3 +1,4 @@
+import math
 from os import path
 import os
 import numpy as np
@@ -54,9 +55,10 @@ def load_truth_image(file_path):
     img = Image.open(file_path).convert("RGBA")
     return np.all(np.array(img) == [0, 255, 0, 255], axis=-1)
 
-def count_permutations(binary_images, truth_image):
+def count_permutations(binary_images, truth_image, cloud_image):
     permutations = np.zeros((16,), dtype=float)
-    npixels = truth_image.size
+    cloud_image_inv = cloud_image == False
+    npixels = np.sum(cloud_image_inv)
 
     for tru_i in range(2):
         for pot_i in range(2):
@@ -66,38 +68,44 @@ def count_permutations(binary_images, truth_image):
                     is_part = is_part & (binary_images[0] == bool(pot_i))
                     is_part = is_part & (binary_images[1] == bool(obj_i))
                     is_part = is_part & (binary_images[2] == bool(fin_i))
+                    is_part = is_part & cloud_image_inv
                     count = np.sum(is_part)
                     index = tru_i * 8 + pot_i * 4 + obj_i * 2 + fin_i
                     permutations[index] = count / npixels
 
     return permutations
 
-def plot_bar_graph(permutations):
-    labels = ["F - FFF", "F - FFT", "F - FTF", "F - FTT"," F - TFF", "F - TFT", "F - TTF", "F - TTT",
-              "T - FFF", "T - FFT", "T - FTF", "T - FTT"," T - TFF", "T - TFT", "T - TTF", "T - TTT"]
-    
-    # Find indices where permutations is non-zero
-    non_zero_indices = np.nonzero(permutations)
-    # Create filtered labels and permutations based on non-zero indices
-    labels = [labels[i] for i in non_zero_indices[0]]
-    permutations = permutations[non_zero_indices]
+def plot_stacked_bar_graph(data_list, stacked_lists):
+    stacked_labels = [stacked_list[0] for stacked_list in stacked_lists]
+    data_list_percent = [(pair[0], pair[1] * 100) for pair in data_list]
+    bbox_props = dict(boxstyle='square,pad=0.2', facecolor='white', edgecolor='black', alpha=0.7)
+    # Creating the stacked bar graph
+    max_v = 0
+    for id_stacked_list, stacked_list in enumerate(stacked_lists):
+        current_bottom = 0
+        for stacked_el in stacked_list[1]:
+            name = data_list_percent[stacked_el][0]
+            value = data_list_percent[stacked_el][1]
+            plt.bar(id_stacked_list, value, bottom=current_bottom, edgecolor='black')
+            
+            plt.text(id_stacked_list + 0.35, current_bottom + value - 0.05, name + f" ({value:.2f}%)", ha='right', fontsize=10, bbox=bbox_props)
+            current_bottom += value
+        plt.text(id_stacked_list - 0.4, current_bottom + 0.005, f"{current_bottom:.2f}%", ha='left', fontsize=12)
+        max_v = max(max_v, math.ceil(current_bottom))
 
-    x = np.arange(len(labels))
-    plt.bar(x, permutations)
-    plt.xticks(x, labels, rotation=45, ha="right")
-    plt.xlabel("Permutations")
-    plt.ylabel("Percent of Total")
-    plt.title("Permutations of the shadow mask values referenced to the baseline")
+    # Adjusting plot aesthetics (optional)
+    plt.xticks(range(len(stacked_labels)), stacked_labels)
 
-    caption = "In the label A - XYZ, A refers to the baseline, X refers to the potential mask,"
-    caption += " Y refers to the object-based mask and Z referse to the final mask."
-    plt.text(0.5, -0.25, caption, transform=plt.gca().transAxes, ha='center', fontsize=10)
+    y_tick_positions = np.arange(0, max_v, 0.1)  # Set y tick positions every 0.05 (from 0 to 100)
+    y_tick_labels = [f"{i:.1f}%" for i in y_tick_positions]  # Format the y tick labels as percentages
+    plt.yticks(y_tick_positions, y_tick_labels)
 
-    # Annotate each bar with its corresponding percentage value
-    for i, val in enumerate(permutations):
-        plt.text(i, val, f"{val:.2%}", ha='center', va='bottom', fontsize=9, color='black')
-
+    plt.xlabel('Type of Pixel Progression', labelpad=10, fontsize=17)
+    plt.ylabel('Average Percentages', labelpad=10, fontsize=17)
+    plt.title('Average Percentage of Pixel Progression Relavent to Probability Analysis Correction')
     plt.grid(axis="y")
+
+    # Display the plot
     plt.show()
 
 def display_image_from_bool_array(bool_array, title="Image"):
@@ -121,16 +129,18 @@ def per_pixel_statistics(binary_path, truth_path):
                             path.join(binary_path,"finalShadowMaskRaw.tif")
                         ]
     truth_file_path = path.join(truth_path,"shadowBaseline.tif")
+    cloud_file_path = path.join(binary_path,"cloudMaskRaw.tif")
 
     binary_images = [load_binary_image(file_path) for file_path in binary_file_paths]
     truth_image = load_truth_image(truth_file_path)
+    cloud_image =  load_binary_image(cloud_file_path)
 
     # display_image_from_bool_array(truth_image, truth_file_path)
     # display_image_from_bool_array(binary_images[0], binary_file_paths[0])
     # display_image_from_bool_array(binary_images[1], binary_file_paths[1])
     # display_image_from_bool_array(binary_images[2], binary_file_paths[2])
 
-    return count_permutations(binary_images, truth_image)
+    return count_permutations(binary_images, truth_image, cloud_image)
 
 
 if __name__ == "__main__":
@@ -153,4 +163,27 @@ if __name__ == "__main__":
         all_permutations_array[:, i] = per_pixel_statistics(dir_pairs[i][1], dir_pairs[i][0])
 
     average_permutations = np.mean(all_permutations_array, axis=1)
-    plot_bar_graph(average_permutations)
+    labelled_average_permutations = [
+        ("F - FFF", average_permutations[0]),
+        ("F - FFT", average_permutations[1]),
+        ("F - FTF", average_permutations[2]),
+        ("F - FTT", average_permutations[3]),
+        ("F - TFF", average_permutations[4]),
+        ("F - TFT", average_permutations[5]),
+        ("F - TTF", average_permutations[6]),
+        ("F - TTT", average_permutations[7]),
+        ("T - FFF", average_permutations[8]),
+        ("T - FFT", average_permutations[9]),
+        ("T - FTF", average_permutations[10]),
+        ("T - FTT", average_permutations[11]),
+        ("T - TFF", average_permutations[12]),
+        ("T - TFT", average_permutations[13]),
+        ("T - TTF", average_permutations[14]),
+        ("T - TTT", average_permutations[15]),
+    ]
+    bar_combinations = [
+        ("Shadow Pixels Correctly Added", [9,13]),
+        ("Shadow Pixels Incorrectly Not Added", [12,8]),
+        ("Non-Shadow Pixels Incorrectly Added", [1,5])
+    ]
+    plot_stacked_bar_graph(labelled_average_permutations, bar_combinations)
