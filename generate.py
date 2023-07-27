@@ -13,7 +13,9 @@ settings_file.close()
 
 executable_dir  = settings['Executable Directory Path']
 executable_name = settings['Executable Name']
+height_variation_executable_name = settings['Height Variation Executable Name']
 executable_path = os.path.join(executable_dir, executable_name)
+height_variation_executable_path = os.path.join(executable_dir, height_variation_executable_name)
 
 print("Executable Path: " + executable_path)
 
@@ -56,9 +58,11 @@ print("Executing shadow detection...")
 for i in range(len(input_eval_dirs)):
     print("----Executing input: " + Quote(input_eval_dirs[i]) + " and outputing to: " + Quote(output_eval_dirs[i]))
     subprocess.run([executable_path, "-e", "-f", "--input_dir=" + Quote(input_eval_dirs[i]), "--output_dir=" + Quote(output_eval_dirs[i])], cwd=executable_dir)
+    subprocess.run([height_variation_executable_path, "--input_dir=" + Quote(input_eval_dirs[i]), "--output_dir=" + Quote(output_eval_dirs[i])], cwd=executable_dir)
 for i in range(len(input_addi_dirs)):
     print("----Executing input: " + Quote(input_addi_dirs[i]) + " and outputing to: " + Quote(output_addi_dirs[i]))
     subprocess.run([executable_path, "-f", "--input_dir=" + Quote(input_addi_dirs[i]), "--output_dir=" + Quote(output_addi_dirs[i])], cwd=executable_dir)
+    subprocess.run([height_variation_executable_path, "--input_dir=" + Quote(input_addi_dirs[i]), "--output_dir=" + Quote(input_addi_dirs[i])], cwd=executable_dir)
 
 eval_json = {}
 #Information Regarding Sun and View Position

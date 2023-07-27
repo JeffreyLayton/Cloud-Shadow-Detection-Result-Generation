@@ -3,6 +3,7 @@ from os import path
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 from PIL import Image
 
 def colorize_green():
@@ -84,9 +85,10 @@ def plot_stacked_bar_graph(data_list, stacked_lists):
     for id_stacked_list, stacked_list in enumerate(stacked_lists):
         current_bottom = 0
         for stacked_el in stacked_list[1]:
-            name = data_list_percent[stacked_el][0]
-            value = data_list_percent[stacked_el][1]
-            plt.bar(id_stacked_list, value, bottom=current_bottom, edgecolor='black')
+            name = data_list_percent[stacked_el[0]][0]
+            value = data_list_percent[stacked_el[0]][1]
+            color = stacked_el[1]
+            plt.bar(id_stacked_list, value, bottom=current_bottom, color=color, edgecolor='black')
             
             plt.text(id_stacked_list + 0.35, current_bottom + value - 0.05, name + f" ({value:.2f}%)", ha='right', fontsize=10, bbox=bbox_props)
             current_bottom += value
@@ -96,13 +98,13 @@ def plot_stacked_bar_graph(data_list, stacked_lists):
     # Adjusting plot aesthetics (optional)
     plt.xticks(range(len(stacked_labels)), stacked_labels)
 
-    y_tick_positions = np.arange(0, max_v, 0.1)  # Set y tick positions every 0.05 (from 0 to 100)
+    y_tick_positions = np.arange(0, max_v, 0.2)
     y_tick_labels = [f"{i:.1f}%" for i in y_tick_positions]  # Format the y tick labels as percentages
     plt.yticks(y_tick_positions, y_tick_labels)
 
     plt.xlabel('Type of Pixel Progression', labelpad=10, fontsize=17)
     plt.ylabel('Average Percentages', labelpad=10, fontsize=17)
-    plt.title('Average Percentage of Pixel Progression Relavent to Probability Analysis Correction')
+    plt.title('Average Percentage of Pixel Progression Relevant to Probability Analysis Correction')
     plt.grid(axis="y")
 
     # Display the plot
@@ -142,6 +144,27 @@ def per_pixel_statistics(binary_path, truth_path):
 
     return count_permutations(binary_images, truth_image, cloud_image)
 
+def plot_graph(heights, dots):
+    plt.figure(figsize=(10, 6))
+    num_subfolders = dots.shape[1]
+    #for i in range(num_subfolders):
+        #plt.plot(heights, dots[:, i], label=f'Subfolder {i+1}')
+
+    average_dots = np.mean(dots, axis=1)
+    plt.plot(heights, average_dots, label='Average', linewidth=2, color='black')
+
+    x_tick_positions = np.arange(0, 2000, 25)
+    plt.xticks(x_tick_positions)
+
+    y_tick_positions = np.arange(-2, 2, 0.05)
+    plt.yticks(y_tick_positions)
+
+    plt.xlabel('Height', fontsize=14)
+    plt.ylabel('Mean Dot Product', fontsize=14)
+    plt.title('Average of Satellite Mean Dot Products at Various Satellite Heights', fontsize=16)
+    #plt.legend()
+    plt.grid(True)
+    plt.show()
 
 if __name__ == "__main__":
     #colorize_green()
@@ -161,8 +184,21 @@ if __name__ == "__main__":
     for i in range(len(dir_pairs)):
         print(dir_pairs[i])
         all_permutations_array[:, i] = per_pixel_statistics(dir_pairs[i][1], dir_pairs[i][0])
-
     average_permutations = np.mean(all_permutations_array, axis=1)
+
+    heights = np.zeros(0)
+    dots = np.zeros((0,0))
+    for i in range(len(dir_pairs)):
+        print(dir_pairs[i])
+        all_permutations_array[:, i] = per_pixel_statistics(dir_pairs[i][1], dir_pairs[i][0])
+        json_file_path = os.path.join(dir_pairs[i][1], 'HeightVariationEvaluation.json')
+        with open(json_file_path, 'r') as f:
+            series_data = json.load(f)['m_ave_dot_series']
+        if i == 0:
+            heights = np.array([item['Height'] for item in series_data])
+            dots = np.zeros((len(series_data), len(dir_pairs)))
+        dots[:, i] = np.array([item['Average Dot Product'] for item in series_data])
+
     labelled_average_permutations = [
         ("F - FFF", average_permutations[0]),
         ("F - FFT", average_permutations[1]),
@@ -182,8 +218,10 @@ if __name__ == "__main__":
         ("T - TTT", average_permutations[15]),
     ]
     bar_combinations = [
-        ("Shadow Pixels Correctly Added", [9,13]),
-        ("Shadow Pixels Incorrectly Not Added", [12,8]),
-        ("Non-Shadow Pixels Incorrectly Added", [1,5])
+        ("Shadow Pixels Correctly Added", [(9,(0.53, 0.81, 0.98)),(13,(0.25, 0.41, 0.88))]),
+        ("Shadow Pixels Incorrectly Not Added", [(12,(1.0,0.3,0.3)),(8, (0.3,1.0,0.3))]),
+        ("Non-Shadow Pixels Incorrectly Added", [(1,(1.0, 0.75, 0.4)),(5,(1.0, 0.5, 0.0))])
     ]
     plot_stacked_bar_graph(labelled_average_permutations, bar_combinations)
+
+    plot_graph(heights, dots)
