@@ -46,36 +46,6 @@ def colorize_green():
 
 
 
-def load_binary_image(file_path):
-    # Load binary image as grayscale with values >0 being True and 0 otherwise
-    img = Image.open(file_path).convert("L")
-    return np.array(img) > 0
-
-def load_truth_image(file_path):
-    # Load RGBA image and set RGB values (0, 255, 0) as True and others as False
-    img = Image.open(file_path).convert("RGBA")
-    return np.all(np.array(img) == [0, 255, 0, 255], axis=-1)
-
-def count_permutations(binary_images, truth_image, cloud_image):
-    permutations = np.zeros((16,), dtype=float)
-    cloud_image_inv = cloud_image == False
-    npixels = np.sum(cloud_image_inv)
-
-    for tru_i in range(2):
-        for pot_i in range(2):
-            for obj_i in range(2):
-                for fin_i in range(2):
-                    is_part =           (truth_image      == bool(tru_i))
-                    is_part = is_part & (binary_images[0] == bool(pot_i))
-                    is_part = is_part & (binary_images[1] == bool(obj_i))
-                    is_part = is_part & (binary_images[2] == bool(fin_i))
-                    is_part = is_part & cloud_image_inv
-                    count = np.sum(is_part)
-                    index = tru_i * 8 + pot_i * 4 + obj_i * 2 + fin_i
-                    permutations[index] = count / npixels
-
-    return permutations
-
 def plot_stacked_bar_graph(data_list, stacked_lists):
     stacked_labels = [stacked_list[0] for stacked_list in stacked_lists]
     data_list_percent = [(pair[0], pair[1] * 100) for pair in data_list]
@@ -123,27 +93,6 @@ def display_image_from_bool_array(bool_array, title="Image"):
     plt.title(title)
     plt.show()
 
-def per_pixel_statistics(binary_path, truth_path):
-    # Replace these file paths with your actual file paths
-    binary_file_paths = [   
-                            path.join(binary_path,"candidateShadowMaskRaw.tif"),
-                            path.join(binary_path,"objectBasedShadowMaskRaw.tif"),
-                            path.join(binary_path,"finalShadowMaskRaw.tif")
-                        ]
-    truth_file_path = path.join(truth_path,"shadowBaseline.tif")
-    cloud_file_path = path.join(binary_path,"cloudMaskRaw.tif")
-
-    binary_images = [load_binary_image(file_path) for file_path in binary_file_paths]
-    truth_image = load_truth_image(truth_file_path)
-    cloud_image =  load_binary_image(cloud_file_path)
-
-    # display_image_from_bool_array(truth_image, truth_file_path)
-    # display_image_from_bool_array(binary_images[0], binary_file_paths[0])
-    # display_image_from_bool_array(binary_images[1], binary_file_paths[1])
-    # display_image_from_bool_array(binary_images[2], binary_file_paths[2])
-
-    return count_permutations(binary_images, truth_image, cloud_image)
-
 def plot_graph(heights, dots):
     plt.figure(figsize=(10, 6))
     num_subfolders = dots.shape[1]
@@ -167,56 +116,7 @@ def plot_graph(heights, dots):
     plt.show()
 
 if __name__ == "__main__":
-    #colorize_green()
-    dat_eval_root_dir = 'data\\evaluation'
-    res_eval_root_dir = 'results\\evaluation'
 
-    dir_pairs = []
-
-    for sub_dir in os.listdir(dat_eval_root_dir):
-        data_dir = path.join(dat_eval_root_dir, sub_dir)
-        if path.isdir(data_dir):
-            res_dir = path.join(res_eval_root_dir, sub_dir)
-            if path.exists(res_dir):
-                dir_pairs.append((data_dir,res_dir))
-
-    all_permutations_array = np.zeros((16, len(dir_pairs)))
-    for i in range(len(dir_pairs)):
-        print(dir_pairs[i])
-        all_permutations_array[:, i] = per_pixel_statistics(dir_pairs[i][1], dir_pairs[i][0])
-    average_permutations = np.mean(all_permutations_array, axis=1)
-
-    heights = np.zeros(0)
-    dots = np.zeros((0,0))
-    for i in range(len(dir_pairs)):
-        print(dir_pairs[i])
-        all_permutations_array[:, i] = per_pixel_statistics(dir_pairs[i][1], dir_pairs[i][0])
-        json_file_path = os.path.join(dir_pairs[i][1], 'HeightVariationEvaluation.json')
-        with open(json_file_path, 'r') as f:
-            series_data = json.load(f)['m_ave_dot_series']
-        if i == 0:
-            heights = np.array([item['Height'] for item in series_data])
-            dots = np.zeros((len(series_data), len(dir_pairs)))
-        dots[:, i] = np.array([item['Average Dot Product'] for item in series_data])
-
-    labelled_average_permutations = [
-        ("F - FFF", average_permutations[0]),
-        ("F - FFT", average_permutations[1]),
-        ("F - FTF", average_permutations[2]),
-        ("F - FTT", average_permutations[3]),
-        ("F - TFF", average_permutations[4]),
-        ("F - TFT", average_permutations[5]),
-        ("F - TTF", average_permutations[6]),
-        ("F - TTT", average_permutations[7]),
-        ("T - FFF", average_permutations[8]),
-        ("T - FFT", average_permutations[9]),
-        ("T - FTF", average_permutations[10]),
-        ("T - FTT", average_permutations[11]),
-        ("T - TFF", average_permutations[12]),
-        ("T - TFT", average_permutations[13]),
-        ("T - TTF", average_permutations[14]),
-        ("T - TTT", average_permutations[15]),
-    ]
     bar_combinations = [
         ("Shadow Pixels Correctly Added", [(9,(0.53, 0.81, 0.98)),(13,(0.25, 0.41, 0.88))]),
         ("Shadow Pixels Incorrectly Not Added", [(12,(1.0,0.3,0.3)),(8, (0.3,1.0,0.3))]),

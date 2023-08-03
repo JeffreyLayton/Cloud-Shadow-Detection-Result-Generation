@@ -5,7 +5,7 @@ import subprocess
 from helpers import *
 
 
-def shadow_detect(root_path, executable_name):
+def height_variation(root_path, executable_name):
     executable_path = os.path.join(root_path, executable_name)
 
     current_path = os.getcwd()
@@ -19,13 +19,12 @@ def shadow_detect(root_path, executable_name):
         subprocess.run([executable_path, "--data_path=" + setting_set_toml_path, "--output_path=" + output_set_toml_path], cwd=root_path)
 
 if __name__ == "__main__":
-    print("Running shadow detection...")
-
+    print("Running height variation...")
     current_path = os.getcwd()
     generate_settings_path = os.path.join(current_path, "generate_settings.json")
     with open(generate_settings_path, 'r') as f:
         settings = json.load(f)
     executable_dir  = settings['Executable Directory Path']
-    executable_name = settings['Executable Name']
-    shadow_detect(executable_dir, executable_name)
+    executable_name = settings['Height Variation Executable Name']
+    height_variation(executable_dir, executable_name)
     print("Complete shadow detection...")

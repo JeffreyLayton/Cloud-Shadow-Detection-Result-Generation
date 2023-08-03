@@ -1,6 +1,5 @@
 import json
 import os
-import shutil
 import tomlkit
 
 def setup():
@@ -13,13 +12,11 @@ def setup():
     if not os.path.exists(data_path):
         raise FileNotFoundError("No data folder present")
     
-    if os.path.exists(setting_path):
-        shutil.rmtree(setting_path)
-    os.makedirs(setting_path)
+    if not os.path.exists(setting_path):
+        os.makedirs(setting_path)
 
-    if os.path.exists(output_path):
-        shutil.rmtree(output_path)
-    os.makedirs(output_path)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
     
     for set_dir in os.listdir(data_path):
         data_set_path = os.path.join(data_path, set_dir)
@@ -33,8 +30,10 @@ def setup():
             request = json.load(json_file)
         bbox_data = request["payload"]["input"]["bounds"]["bbox"]
 
-        os.makedirs(setting_set_path)
-        os.makedirs(output_set_path)
+        if not os.path.exists(setting_set_path):
+            os.makedirs(setting_set_path)
+        if not os.path.exists(output_set_path):
+            os.makedirs(output_set_path)
 
         data_toml = tomlkit.document()
 
@@ -112,7 +111,7 @@ def setup():
         full_output_table.add("OSM_path", OSM_path)
 
         FSM_path = os.path.join(output_set_path, "FSM.tif")
-        full_output_table.add("FSMpath", FSM_path)
+        full_output_table.add("FSM_path", FSM_path)
 
         Alpha_path = os.path.join(output_set_path, "Alpha.tif")
         full_output_table.add("Alpha_path", Alpha_path)
@@ -132,9 +131,12 @@ def setup():
         EvaluationMetric_path = os.path.join(output_set_path, "EvaluationMetric.json")
         full_output_table.add("EvaluationMetric_path", EvaluationMetric_path)
 
+        HeightVariationMetric_path = os.path.join(output_set_path, "HeightVariationMetric.json")
+        full_output_table.add("HeightVariationMetric_path", HeightVariationMetric_path)
+
         full_output_toml["Output"] = full_output_table
         tomlkit.dumps(full_output_toml)
-        full_output_toml_path = os.path.join(output_set_path, "full_output.toml")
+        full_output_toml_path = os.path.join(setting_set_path, "full_output.toml")
         with open(full_output_toml_path, "w+") as f:
             f.write(full_output_toml.as_string())
             f.flush()
