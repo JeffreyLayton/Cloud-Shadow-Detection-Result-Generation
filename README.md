@@ -24,4 +24,4 @@ Note that these need to be in the same folder.
 ```
 py .\refresh.py
 ```
-If everything ran successfuly, there should be an output directory with the per data set results, in each dated folder, and the compiled quantitative results in several X_compiled.json files.
+If everything ran successfully, there should be an output directory with the per data set results, in each dated folder, and the compiled quantitative results in several X_compiled.json files.
