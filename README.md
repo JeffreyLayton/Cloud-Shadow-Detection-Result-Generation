@@ -12,7 +12,7 @@ that is implemented in the Cloud-Shadow-Detection repository.
 
 ```json
 {
-  "Executable Directory Path" : "path/to/build/folder/",
+  "Executable Directory Path" : "path\to\executable\folder",
   "Executable Name" : "Cloud-Shadow-Detection.exe",
   "Height Variation Executable Name" : "Height-Variation.exe"
 }
