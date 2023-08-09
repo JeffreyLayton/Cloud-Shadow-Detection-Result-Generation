@@ -41,4 +41,4 @@ As such, support is limited to modern windows machines. The program was written 
 
 ## License
 
-This repository in licensed under the MIT License.
+This repository in licensed under the [MIT License](LICENSE.md).
