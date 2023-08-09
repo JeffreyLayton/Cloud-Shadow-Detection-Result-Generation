@@ -1,0 +1,138 @@
+{
+    "headers": {
+        "accept": "application/x-tar",
+        "content-type": "application/json"
+    },
+    "payload": {
+        "evalscript": "\n            //VERSION=3\n            function setup() {\n                return {\n                    input: [{\n                        bands: [\"B02\", \"B03\", \"B04\", \"B08\", \"B11\", \"CLP\", \"CLD\", \"CLM\", \"SCL\", \"sunAzimuthAngles\", \"sunZenithAngles\", \"viewAzimuthMean\", \"viewZenithMean\"], \n                        units: [\"reflectance\", \"reflectance\", \"reflectance\", \"reflectance\", \"reflectance\", \"DN\", \"DN\", \"DN\", \"DN\", \"DN\", \"DN\", \"DN\", \"DN\"],\n                        mosaicking: \"SIMPLE\",\n                    }],\n                    output: [{\"id\": \"B02\", \"bands\": 1, \"sampleType\": \"UINT16\"}, {\"id\": \"B03\", \"bands\": 1, \"sampleType\": \"UINT16\"}, {\"id\": \"B04\", \"bands\": 1, \"sampleType\": \"UINT16\"}, {\"id\": \"B08\", \"bands\": 1, \"sampleType\": \"UINT16\"}, {\"id\": \"B11\", \"bands\": 1, \"sampleType\": \"UINT16\"}, {\"id\": \"CLM\", \"bands\": 1, \"sampleType\": \"UINT8\"}, {\"id\": \"CLD\", \"bands\": 1, \"sampleType\": \"UINT8\"}, {\"id\": \"CLP\", \"bands\": 1, \"sampleType\": \"UINT8\"}, {\"id\": \"SCL\", \"bands\": 1, \"sampleType\": \"UINT8\"}, {\"id\": \"RGB\", \"bands\": 3, \"sampleType\": \"UINT8\"}, {\"id\": \"NDVI\", \"bands\": 1, \"sampleType\": \"FLOAT32\"}, {\"id\": \"NDSI\", \"bands\": 1, \"sampleType\": \"FLOAT32\"}, {\"id\": \"sunAzimuthAngles\", \"bands\": 1, \"sampleType\": \"FLOAT32\"}, {\"id\": \"sunZenithAngles\", \"bands\": 1, \"sampleType\": \"FLOAT32\"}, {\"id\": \"viewAzimuthMean\", \"bands\": 1, \"sampleType\": \"FLOAT32\"}, {\"id\": \"viewZenithMean\", \"bands\": 1, \"sampleType\": \"FLOAT32\"}]\n                };\n            }\n            function evaluatePixel(sample) {\n                return {B02: [65535 * sample.B02], B03: [65535 * sample.B03], B04: [65535 * sample.B04], B08: [65535 * sample.B08], B11: [65535 * sample.B11], CLM: [sample.CLM], CLD: [sample.CLD], CLP: [sample.CLP], SCL: [sample.SCL], RGB: [2.5*255*sample.B04, 2.5*255*sample.B03, 2.5*255*sample.B02], NDVI: [(sample.B08 - sample.B04)/(sample.B08 + sample.B04)], NDSI: [(sample.B03 - sample.B11)/(sample.B03 + sample.B11)], sunAzimuthAngles: [sample.sunAzimuthAngles], sunZenithAngles: [sample.sunZenithAngles], viewAzimuthMean: [sample.viewAzimuthMean], viewZenithMean: [sample.viewZenithMean]};\n            }\n        ",
+        "input": {
+            "bounds": {
+                "bbox": [
+                    -113.639145,
+                    51.256758,
+                    -113.329468,
+                    51.4493
+                ],
+                "properties": {
+                    "crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
+                }
+            },
+            "data": [
+                {
+                    "dataFilter": {
+                        "mosaickingOrder": "mostRecent",
+                        "timeRange": {
+                            "from": "2020-05-01T00:00:00Z",
+                            "to": "2020-05-01T23:59:59Z"
+                        }
+                    },
+                    "type": "S2L2A"
+                }
+            ]
+        },
+        "output": {
+            "height": 689,
+            "responses": [
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "B02"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "B03"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "B04"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "B08"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "B11"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "CLM"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "CLD"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "CLP"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "SCL"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "RGB"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "NDVI"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "NDSI"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "sunAzimuthAngles"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "sunZenithAngles"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "viewAzimuthMean"
+                },
+                {
+                    "format": {
+                        "type": "image/tiff"
+                    },
+                    "identifier": "viewZenithMean"
+                }
+            ],
+            "width": 743
+        }
+    },
+    "timestamp": "2023-07-20T12:47:23.390385",
+    "url": "https://services.sentinel-hub.com/api/v1/process"
+}
