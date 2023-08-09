@@ -1,6 +1,6 @@
 # Cloud-Shadow-Detection-Result-Generation
 by
-Jeffrey Layton (jeffrey.layton@ucalgary.ca).
+Jeffrey Layton (jeffrey.layton@ucalgary.ca), Lakin Wecker, Dr. Adam Runions, Dr. Faramarz Samavati
 
 This project automates the result generation for the paper Cloud Shadow Detection Over Canadian Farmland via Ray-casting with Probability Analysis Refinement using Sentinal-2 Satellite Data, 
 that is implemented in the [Cloud-Shadow-Detection](https://github.com/JeffreyLayton/Cloud-Shadow-Detection) repository. 
