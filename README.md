@@ -13,7 +13,7 @@ You can clone the repo with the following:
 git clone https://github.com/JeffreyLayton/Cloud-Shadow-Detection-Result-Generation.git
 ```
 
-# Instructions
+## Instructions
 
 1) Build the Cloud-Shadow-Detection and Height-Variation executable in the Cloud-Shadow-Detection project.
 2) Obtain the path and name of the executables and place them in the generate_settings.json as such:
@@ -39,6 +39,6 @@ If everything ran successfully, there should be a settings and output directory 
 The system was developed and tested on modern x64 windows machines (10 or 11).
 As such, support is limited to modern windows machines. The program was written for the C++20 standard or later.
 
-# License
+## License
 
 This repository in licensed under the MIT License.
